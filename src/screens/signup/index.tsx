@@ -13,6 +13,8 @@ import { Input, Button, InputProps } from 'react-native-elements';
 
 import { StackNavigationProp } from '@react-navigation/stack';
 import { useNavigation } from '@react-navigation/native';
+import api from '../../plugins/axios'
+
 type SignUpScreenNavigationProp = StackNavigationProp<RootStackParamList,'SignUp'>;
 
 // type Props = {
@@ -60,6 +62,8 @@ export function SignUp() {
     return passwordCheck;
   };
 
+  api
+
   return (
       <View style={styles.container}>
         <Image 
@@ -99,10 +103,10 @@ export function SignUp() {
               validPassword ? '' : 'Please enter at least 8 characters'
             }
           />
-          <TouchableOpacity onPress={() => navigation.navigate('Details')}>
+          <TouchableOpacity onPress={() => signup()}>
             <Button
               title="Criar conta"
-              onPress={() => navigation.navigate('Details')}
+              onPress={() => signup()}
             />
           </TouchableOpacity>
           <Text style={styles.subtitle}>

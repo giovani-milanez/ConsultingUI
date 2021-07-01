@@ -1,5 +1,5 @@
 type RootStackParamList = {
+  Home: undefined,
   SignIn: undefined,
-  Details: undefined,
   SignUp: undefined
 };
