@@ -17,10 +17,6 @@ import api from '../../plugins/axios'
 
 type SignUpScreenNavigationProp = StackNavigationProp<RootStackParamList,'SignUp'>;
 
-// type Props = {
-//   navigation: SignInScreenNavigationProp;
-// };
-
 
 export function SignUp() {
   const navigation = useNavigation<SignUpScreenNavigationProp>();
@@ -36,9 +32,6 @@ export function SignUp() {
   let nameInput = useRef<TextInput>(null);
 
   const signup = () => {
-    const emailValid = validateEmail();
-    // const passwordValid = validatePassword();
-    // const nameValid = validateName();
   }
   const validateEmail = () => {
     const re = /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
@@ -49,20 +42,18 @@ export function SignUp() {
   };
 
   const validatePassword = () => {
-    const nameCheck = name.length >= 3;
-    setNameValid(nameCheck);
-    nameCheck || nameInput.current?.focus();
-    return nameCheck;
-  };
-
-  const validateName = () => {
-    const passwordCheck = password.length >= 8;
+    const passwordCheck = password.length >= 6;
     setPasswordValid(passwordCheck);
     passwordCheck || passwordInput.current?.focus();
     return passwordCheck;
   };
 
-  api
+  const validateName = () => {
+    const nameCheck = name.length >= 3;
+    setNameValid(nameCheck);
+    nameCheck || nameInput.current?.focus();
+    return nameCheck;
+  };
 
   return (
       <View style={styles.container}>
@@ -78,7 +69,17 @@ export function SignUp() {
             onChangeText={(text: string) => setName(text)}
             placeholder="Nome"
             returnKeyType="next"
-            errorMessage={validName ? '' : 'Please enter a valid name'}
+            errorMessage={validName ? '' : 'Nome muito curto'}
+            onSubmitEditing={() => {
+              const isValid = validateName();
+              if (isValid)
+                emailInput.current?.focus();
+            }}
+            autoFocus={false}
+            autoCapitalize="none"
+            keyboardAppearance="dark"
+            autoCorrect={false}
+            blurOnSubmit={false}
           />
           <Input
             ref={emailInput}
@@ -87,9 +88,11 @@ export function SignUp() {
             placeholder="Email"
             keyboardType="email-address"
             returnKeyType="next"
-            errorMessage={validEmail ? '' : 'Please enter a valid email address'}
-            onChange={() => {
-              validateEmail();
+            errorMessage={validEmail ? '' : 'Email inválido'}
+            onSubmitEditing={() => {
+              const isValid = validateEmail();
+              if (isValid)
+                passwordInput.current?.focus();
             }}
           />
           <Input
@@ -98,10 +101,20 @@ export function SignUp() {
             onChangeText={(text: string) => setPassword(text)}
             placeholder="Senha"
             secureTextEntry
-            returnKeyType="next"
+            returnKeyType="go"
             errorMessage={
-              validPassword ? '' : 'Please enter at least 8 characters'
+              validPassword ? '' : 'Mínimo de 6 caracteres'
             }
+            onSubmitEditing={() => {
+              const isValid = validatePassword();
+              if (isValid)
+                signup()
+            }}
+            autoFocus={false}
+            autoCapitalize="none"
+            keyboardAppearance="dark"
+            autoCorrect={false}
+            blurOnSubmit={false}
           />
           <TouchableOpacity onPress={() => signup()}>
             <Button

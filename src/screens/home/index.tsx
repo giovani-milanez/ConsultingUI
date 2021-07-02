@@ -30,11 +30,7 @@ export function Home({ route, navigation }: Props) {
 
   const getServices = async () => {
     try {
-      const response = await api.get('/service', {
-        headers: {
-          Authorization: `Bearer ${accessToken}`
-        }
-      });
+      const response = await api.get('/service');
       setService(response.data[0].title);
     } catch (_err) {
       if (_err.response) {

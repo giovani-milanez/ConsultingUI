@@ -6,13 +6,13 @@ import {
   TouchableOpacity,
   Platform,
   KeyboardAvoidingView,
-  Keyboard,
-  TouchableWithoutFeedback,
+  TextInput,
   ScrollView
 } from 'react-native'
 import { Input, Button } from 'react-native-elements';
 import { StackNavigationProp } from '@react-navigation/stack';
 import { useNavigation, useRoute } from '@react-navigation/native';
+import { useToast } from 'react-native-fast-toast'
 
 // redux
 import { useAppSelector, useAppDispatch } from '../../redux/hooks'
@@ -31,22 +31,50 @@ export function SignIn() {
   const [password, setPassword] = useState<string>('');
   const [validEmail, setEmailValid] = useState<boolean>(true);
   const [validPassword, setPasswordValid] = useState<boolean>(true);
+  const emailInput = useRef<TextInput>(null);
+  const passwordInput = useRef<TextInput>(null);
   const navigation = useNavigation<SignInScreenNavigationProp>();
 
   const dispatch = useAppDispatch()
+  const toast = useToast()
+
+  const validateEmail = () => {
+    const re = /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
+    const emailCheck = re.test(email);
+    setEmailValid(emailCheck);
+    return emailCheck;
+  };
+
+  const validatePassword = () => {
+    const passwordCheck = password.length >= 6;
+    setPasswordValid(passwordCheck);
+    return passwordCheck;
+  };
 
   const signIn = async () => {
+    const isValidEmail = validateEmail();
+    const isValidPassword = validatePassword();    
+    if (isValidEmail && isValidPassword)
+    {
       try {
         const response = await api.post('/auth/signin', {
           email: email,
           password: password,
         });
+        // reset state
+        setPasswordValid(true)
+        setEmailValid(true)
+        setEmail('')
+        setPassword('')
+        // update redux global state
         dispatch(login({accessToken: response.data.accessToken, refreshToken: response.data.refreshToken}))
+        // navigate to home
         navigation.navigate('Home')
       } catch (_err) {
         console.log(_err);
-        setError('Houve um problema com o login, verifique suas credenciais!');
+        toast.show('Usuário ou senha inválidos', { type: 'danger', placement: 'top'})
       }
+    }
   };
 
   return (
@@ -75,22 +103,42 @@ export function SignIn() {
             }
 
             <Input
+              ref={emailInput}
               value={email}
               onChangeText={(text: string) => setEmail(text)}
               placeholder="Email"
               keyboardType="email-address"
               returnKeyType="next"
-              errorMessage={validEmail ? '' : 'Please enter a valid email address'}
+              errorMessage={validEmail ? '' : 'Email inválido'}
+              onSubmitEditing={() => {
+                validateEmail();
+                passwordInput.current?.focus();
+              }}
+              autoFocus={false}
+              autoCapitalize="none"
+              keyboardAppearance="dark"
+              autoCorrect={false}
+              blurOnSubmit={false}
             />
             <Input
+              ref={passwordInput}
               value={password}
               onChangeText={(text: string) => setPassword(text)}
               placeholder="Senha"
               secureTextEntry
-              returnKeyType="next"
+              returnKeyType="go"
               errorMessage={
-                validPassword ? '' : 'Please enter at least 8 characters'
+                validPassword ? '' : 'Mínimo de 6 caracteres'
               }
+              onSubmitEditing={() => {
+                validatePassword();
+                signIn()
+              }}
+              autoFocus={false}
+              autoCapitalize="none"
+              keyboardAppearance="dark"
+              autoCorrect={false}
+              blurOnSubmit={false}
             />
             <TouchableOpacity onPress={() => signIn()}>
               <Button

@@ -1,9 +1,12 @@
 import React  from 'react';
+import { View, Text } from 'react-native'
+import { Provider } from 'react-redux'
 import { ThemeProvider } from 'react-native-elements';
 import { NavigationContainer } from '@react-navigation/native';
 import { createStackNavigator, StackScreenProps } from '@react-navigation/stack';
-import { Provider } from 'react-redux'
+import { ToastProvider } from 'react-native-fast-toast'
 
+import { navigationRef } from './src/screens/RootNavigation';
 import store from './src/redux/store'
 import { theme } from "./src/global/theme"
 import { SignIn } from './src/screens/signin';
@@ -27,24 +30,29 @@ const MyTheme = {
 export default function App() {
   return (
     <Provider store={store}>
-      <ThemeProvider theme={theme}>      
-        <NavigationContainer theme={MyTheme}>
-          <Stack.Navigator 
-            initialRouteName="SignIn"
-            screenOptions={{
-              headerStyle: {
-                backgroundColor: theme.colors.primary,
-              },
-              headerTintColor: theme.colors.secondary,
-              headerTitleStyle: {
-                fontWeight: 'bold',
-              },
-            }}>
-            <Stack.Screen name="SignIn" component={SignIn} options={{ title: 'Entrar' }} />
-            <Stack.Screen name="SignUp" component={SignUp} options={{ title: 'Criar conta' }} />
-            <Stack.Screen name="Home" component={Home} />
-          </Stack.Navigator>
-        </NavigationContainer>
+      <ThemeProvider theme={theme}>
+        <ToastProvider 
+          offset={100}
+          placement="top"
+        >
+          <NavigationContainer theme={MyTheme} ref={navigationRef}>
+            <Stack.Navigator 
+              initialRouteName="SignUp"
+              screenOptions={{
+                headerStyle: {
+                  backgroundColor: theme.colors.primary,
+                },
+                headerTintColor: theme.colors.secondary,
+                headerTitleStyle: {
+                  fontWeight: 'normal',
+                },
+              }}>
+              <Stack.Screen name="SignIn" component={SignIn} options={{ title: 'Entrar' }} />
+              <Stack.Screen name="SignUp" component={SignUp} options={{ title: 'Criar conta' }} />
+              <Stack.Screen name="Home" component={Home} />
+            </Stack.Navigator>
+          </NavigationContainer>
+        </ToastProvider>        
       </ThemeProvider>
     </Provider>    
   )

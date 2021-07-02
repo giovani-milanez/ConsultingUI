@@ -31,5 +31,24 @@ export const styles = StyleSheet.create({
     fontSize: 15,
     textAlign: 'center',
     marginTop: 8
-  } 
+  },
+  inputContainer: {
+    paddingLeft: 8,
+    borderRadius: 40,
+    borderWidth: 1,
+    borderColor: 'rgba(110, 120, 170, 1)',
+    height: 45,
+    marginVertical: 10,
+  },
+  inputStyle: {
+    flex: 1,
+    marginLeft: 10,
+    color: 'white',
+    fontSize: 16,
+  },
+  errorInputStyle: {
+    marginTop: 0,
+    textAlign: 'center',
+    color: '#F44336',
+  },
 });

@@ -55,6 +55,11 @@ export const theme = {
       color: secondary
       // borderWidth: 1,
       // borderColor: secondary      
-    }
+    },
+    errorStyle: {
+      textAlign: 'center',
+      color: '#F44336'
+    },
+    placeholderTextColor: secondary
   }
 }
