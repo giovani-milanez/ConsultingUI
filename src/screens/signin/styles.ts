@@ -1,4 +1,4 @@
-import { StyleSheet } from 'react-native';
+import { StyleSheet, Platform } from 'react-native';
 import { theme } from '../../global/theme';
 
 export const styles = StyleSheet.create({
@@ -6,11 +6,13 @@ export const styles = StyleSheet.create({
     alignItems: 'center'
   },
   image: {
-    width: '100%', 
-    height: 360
+    height: 140,
+    width: 360,
+    marginTop: 20
   },
   content: {
-    marginTop: -100,
+    // marginTop: -100,
+    width: Platform.OS === 'web' ? '40%' : '100%', 
     paddingHorizontal: 50
   },
   title: {

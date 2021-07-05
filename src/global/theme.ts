@@ -9,6 +9,7 @@
 const primary = '#F87E0E';
 const secondary = '#DDE3F0';
 const backgroundColor = '#293046';
+const blue = '#1F7CE9'
 
 export const theme = {
   dark: false,
@@ -27,10 +28,7 @@ export const theme = {
     titleStyle: {
       flex: 1,
       fontSize: 15,
-      // textAlign: 'center',
-      // alignItems: 'center',
-      color: secondary,
-      marginBottom: 0
+      color: secondary
     },
     containerStyle: {
       width: '100%',
@@ -39,17 +37,37 @@ export const theme = {
       flexDirection: 'row',
       alignItems: 'center',
       justifyContent: 'center',
-      backgroundColor: primary
+      backgroundColor: primary,
+      marginTop: 0,
+      marginBottom: 10,
+      marginRight: 0,
+      marginLeft: 0
     },
     buttonStyle: {
-      backgroundColor: primary
+      backgroundColor: primary      
     }
     // type: 'solid'
+  },
+  ButtonGroup: {
+    containerStyle: {
+      height: 50, 
+      width: '100%',
+      marginTop: 0,
+      marginBottom: 10,
+      marginRight: 0,
+      marginLeft: 0
+    },
+    selectedButtonStyle: {
+      backgroundColor: blue
+    },
+    textStyle: {
+      // color: secondary
+    }
   },
   Input: {
     inputContainerStyle: {
       width: '100%',
-      lignItems: 'center'
+      alignItems: 'center'
     },
     inputStyle: {
       color: secondary

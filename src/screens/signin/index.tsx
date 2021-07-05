@@ -1,3 +1,4 @@
+// react
 import React, { useRef, useState } from 'react'
 import { 
   View, 
@@ -9,28 +10,31 @@ import {
   TextInput,
   ScrollView
 } from 'react-native'
-import { Input, Button } from 'react-native-elements';
+import { Input, Button, SocialIcon } from 'react-native-elements';
 import { StackNavigationProp } from '@react-navigation/stack';
-import { useNavigation, useRoute } from '@react-navigation/native';
+import { useNavigation } from '@react-navigation/native';
 import { useToast } from 'react-native-fast-toast'
 
 // redux
-import { useAppSelector, useAppDispatch } from '../../redux/hooks'
+import { useAppDispatch } from '../../redux/hooks'
 import { login } from '../../redux/userSlice'
 
+// local
 import IllustrationImg from '../../../assets/adaptive-icon.png'
 import { styles } from './styles';
 import api from '../../plugins/axios'
-
+import { GoogleButton } from '../../components/GoogleButton'
 
 type SignInScreenNavigationProp = StackNavigationProp<RootStackParamList,'SignIn'>;
 
 export function SignIn() {
+  const [token, setToken] = useState<string>('');
   const [error, setError] = useState<string>('');
   const [email, setEmail] = useState<string>('');
   const [password, setPassword] = useState<string>('');
   const [validEmail, setEmailValid] = useState<boolean>(true);
   const [validPassword, setPasswordValid] = useState<boolean>(true);
+  const [loading, setLoading] = useState<boolean>(false);
   const emailInput = useRef<TextInput>(null);
   const passwordInput = useRef<TextInput>(null);
   const navigation = useNavigation<SignInScreenNavigationProp>();
@@ -56,6 +60,7 @@ export function SignIn() {
     const isValidPassword = validatePassword();    
     if (isValidEmail && isValidPassword)
     {
+      setLoading(true)
       try {
         const response = await api.post('/auth/signin', {
           email: email,
@@ -73,6 +78,8 @@ export function SignIn() {
       } catch (_err) {
         console.log(_err);
         toast.show('Usuário ou senha inválidos', { type: 'danger', placement: 'top'})
+      } finally {
+        setLoading(false)
       }
     }
   };
@@ -81,15 +88,15 @@ export function SignIn() {
     <KeyboardAvoidingView
       enabled
       behavior={Platform.OS === "ios" ? "padding" : undefined}
-      style={styles.container}
     >
       <ScrollView>
-        <View>
+        <View style={styles.container}>
           <Image 
             source={IllustrationImg} 
             style={styles.image}
-            resizeMode="contain"
+            resizeMode="cover"
           />
+          <Text>{token}</Text>
           <View style={styles.content}>
             <Text>{error}</Text>
             <Text style={styles.title}>
@@ -144,19 +151,27 @@ export function SignIn() {
               <Button
                 title="Entrar"
                 onPress={() => signIn()}
+                loading={loading}
+                disabled={loading}
               />
             </TouchableOpacity>
             <Text style={styles.subtitle}>
             ou
             </Text>
+            <GoogleButton
+              title="Entrar com Google"
+              loading={loading}
+              onSucess={setToken}
+              onError={() => setToken('error!')}
+            />
             <TouchableOpacity>
-              <Button
-              icon={{
-                name: "facebook",
-                size: 32,
-                color: "white"
-              }}
+              <SocialIcon
                 title="Entrar com Facebook"
+                type='facebook'
+                button
+                // light
+                loading={loading}
+                disabled={loading}
               />
             </TouchableOpacity>
             <Text style={styles.signupText}>
@@ -165,6 +180,6 @@ export function SignIn() {
           </View>
         </View>
       </ScrollView>      
-    </KeyboardAvoidingView>      
+     </KeyboardAvoidingView>      
   )
 }

@@ -6,12 +6,13 @@ export const styles = StyleSheet.create({
     alignItems: 'center',
   },
   image: {
-    width: '100%', 
-    height: 360
+    height: 140,
+    width: 360,
+    marginTop: 20
   },
   content: {
     width: Platform.OS === 'web' ? '40%' : '100%', 
-    marginTop: Platform.OS === 'web' ? -80 : -100,
+    // marginTop: Platform.OS === 'web' ? -80 : -100,
     paddingHorizontal: 50
   },
   title: {
@@ -25,7 +26,7 @@ export const styles = StyleSheet.create({
     fontSize: 15,
     textAlign: 'center',
     marginBottom: 16,
-    marginTop: 8
+    marginTop: 0
   },
   signupText: {
     color: theme.colors.secondary,

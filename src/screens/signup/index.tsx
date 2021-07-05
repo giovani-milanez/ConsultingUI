@@ -7,13 +7,20 @@ import {
   TextInput
 } from 'react-native'
 
+// import IllustrationImg from '../../assets/girha_220.png'
 import IllustrationImg from '../../../assets/adaptive-icon.png'
 import { styles } from './styles';
-import { Input, Button, InputProps } from 'react-native-elements';
+import { Input, Button, ButtonGroup } from 'react-native-elements';
 
 import { StackNavigationProp } from '@react-navigation/stack';
 import { useNavigation } from '@react-navigation/native';
+import { useToast } from 'react-native-fast-toast'
+
 import api from '../../plugins/axios'
+import { useAppDispatch } from '../../redux/hooks'
+import { login } from '../../redux/userSlice'
+import { GoogleButton } from '../../components/GoogleButton'
+
 
 type SignUpScreenNavigationProp = StackNavigationProp<RootStackParamList,'SignUp'>;
 
@@ -26,12 +33,50 @@ export function SignUp() {
   const [validEmail, setEmailValid] = useState<boolean>(true);
   const [validPassword, setPasswordValid] = useState<boolean>(true);
   const [validName, setNameValid] = useState<boolean>(true);
+  const [index, setIndex] = useState<number>(0);
+  const [loading, setLoading] = useState<boolean>(false);
 
   let emailInput = useRef<TextInput>(null);
   let passwordInput = useRef<TextInput>(null);
   let nameInput = useRef<TextInput>(null);
+  const dispatch = useAppDispatch()
+  const toast = useToast()
+  const buttons = ['Contrar Serviços', 'Prestar Serviços']
 
-  const signup = () => {
+
+  const signup = async () => {
+    const isValidEmail = validateEmail();
+    const isValidPassword = validatePassword();
+    const isNamePassword = validateName();
+    if (isValidEmail && isValidPassword && isNamePassword)
+    {
+      setLoading(true)
+      try {
+        const response = await api.post('/auth/signup', {
+          name: name,
+          email: email,
+          password: password,
+          isConsultant: index === 1
+        });
+        // reset state
+        setNameValid(true)
+        setPasswordValid(true)
+        setEmailValid(true)
+        setName('')
+        setEmail('')
+        setPassword('')
+        setIndex(0)
+        // update redux global state
+        dispatch(login({accessToken: response.data.accessToken, refreshToken: response.data.refreshToken}))
+        // navigate to home
+        navigation.navigate('Home')
+      } catch (_err) {
+        console.log(_err.response.data);
+        toast.show(_err.response.data.message, { type: 'danger', placement: 'top', duration: 5000 })
+      } finally {
+        setLoading(false)
+      }
+    }
   }
   const validateEmail = () => {
     const re = /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
@@ -55,12 +100,20 @@ export function SignUp() {
     return nameCheck;
   };
 
+  const onGoogleSuccess = (token: string) => {
+
+  }
+
+  const onGoogleError = () => {
+    toast.show('Não foi possível criar a conta com Google', { type: 'danger', placement: 'top', duration: 5000 })
+  }
+
   return (
       <View style={styles.container}>
         <Image 
           source={IllustrationImg} 
           style={styles.image}
-          resizeMode="contain"
+          resizeMode="cover"
         />
         <View style={styles.content}>
           <Input
@@ -116,25 +169,31 @@ export function SignUp() {
             autoCorrect={false}
             blurOnSubmit={false}
           />
+          <Text style={styles.subtitle}>
+           O que você busca ?
+          </Text>
+          <ButtonGroup
+            onPress={setIndex}
+            selectedIndex={index}
+            buttons={buttons}
+          />
           <TouchableOpacity onPress={() => signup()}>
             <Button
               title="Criar conta"
               onPress={() => signup()}
+              loading={loading}
+              disabled={loading}
             />
           </TouchableOpacity>
           <Text style={styles.subtitle}>
            ou
           </Text>
-          <TouchableOpacity>
-            <Button
-            icon={{
-              name: "facebook",
-              size: 32,
-              color: "white"
-            }}
-              title="Criar conta com Facebook"
-            />
-          </TouchableOpacity>
+          <GoogleButton
+            title="Criar conta com Google"
+            loading={loading}
+            onSucess={onGoogleSuccess}
+            onError={onGoogleError}
+          />
         </View>
       </View>
   )
