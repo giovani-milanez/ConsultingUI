@@ -25,6 +25,16 @@ export const theme = {
     width: '100%'
   },
   Button: {
+    loadingProps: {
+      color: blue,
+      size: 'large'
+    },
+    loadingStyle: {
+      backgroundColor: primary,
+    },
+    disabledStyle: {
+      backgroundColor: primary,
+    },
     titleStyle: {
       flex: 1,
       fontSize: 15,

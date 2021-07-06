@@ -158,22 +158,22 @@ export function SignIn() {
             <Text style={styles.subtitle}>
             ou
             </Text>
-            <GoogleButton
-              title="Entrar com Google"
+            {/* <GoogleButton
+              title="Criar conta com Google"
               loading={loading}
-              onSucess={setToken}
-              onError={() => setToken('error!')}
+              onSucess={onGoogleSuccess}
+              onError={onGoogleError}
+              onStart={() => setLoading(true)}
+              onEnd={() => setLoading(false)}
             />
-            <TouchableOpacity>
-              <SocialIcon
-                title="Entrar com Facebook"
-                type='facebook'
-                button
-                // light
-                loading={loading}
-                disabled={loading}
-              />
-            </TouchableOpacity>
+            <FacebookButton
+              title="Criar conta com Facebook"
+              loading={loading}
+              onSucess={onFacebookSuccess}
+              onError={onFacebookError}
+              onStart={() => setLoading(true)}
+              onEnd={() => setLoading(false)}
+            /> */}
             <Text style={styles.signupText}>
             Não tem uma conta? Cadastre-se
             </Text>

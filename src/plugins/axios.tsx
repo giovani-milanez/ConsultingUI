@@ -1,14 +1,15 @@
 import axios from 'axios';
+import { Platform } from 'react-native';
 
 import store from '../redux/store';
 import { login } from '../redux/userSlice'
 import * as RootNavigation from '../screens/RootNavigation';
 
 
-const url = 'http://192.168.3.9:29516/api/v1.0/'
+const url = Platform.OS === 'web' ? 'https://192.168.3.9:44343/api/v1.0/' : 'http://192.168.3.9:29516/api/v1.0/'
 const api = axios.create({
   baseURL: url,
-  timeout: 3000,
+  timeout: 10000,
   headers: {
     'Content-Type': 'application/json'
   }
@@ -16,7 +17,7 @@ const api = axios.create({
 
 const apiRefresh = axios.create({
   baseURL: url,
-  timeout: 3000,
+  timeout: 10000,
   headers: {
     'Content-Type': 'application/json'
   }

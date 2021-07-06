@@ -3,11 +3,12 @@ import { TouchableOpacity } from 'react-native'
 import { SocialIcon } from 'react-native-elements';
 
 import * as WebBrowser from 'expo-web-browser';
-import * as Google from 'expo-auth-session/providers/google';
+import * as Facebook from 'expo-auth-session/providers/facebook';
+import { ResponseType } from 'expo-auth-session';
 
 WebBrowser.maybeCompleteAuthSession();
 
-type GoogleButtonProps = {
+type FacebookButtonProps = {
   title: string,
   loading: boolean,
   onSucess: Function,
@@ -16,18 +17,18 @@ type GoogleButtonProps = {
   onEnd: Function
 }
 
-export function GoogleButton(props : GoogleButtonProps) {
-  const [request, response, promptAsync] = Google.useIdTokenAuthRequest({
-    expoClientId: '298374665465-8pqbsk0j8taauo015v0otjias4d9bd6r.apps.googleusercontent.com',
-    // iosClientId: 'GOOGLE_GUID.apps.googleusercontent.com',
-    // androidClientId: 'GOOGLE_GUID.apps.googleusercontent.com',
-    webClientId: '298374665465-7a45vnk7rtgluiop788juljjhlqbaqpl.apps.googleusercontent.com',
-  });
+export function FacebookButton(props : FacebookButtonProps) {
   const [hasClicked, setClicked] = useState<boolean>(false);
+
+  const [request, response, promptAsync] = Facebook.useAuthRequest({
+    clientId: '185907723324795',
+    responseType: ResponseType.Token,
+    scopes: ['public_profile', 'email']
+  });
 
   React.useEffect(() => {
     if (response?.type === 'success') {
-      props.onSucess(response.params.id_token)
+      props.onSucess(response.params.access_token)
       props.onEnd();
     }
     else {
@@ -42,7 +43,7 @@ export function GoogleButton(props : GoogleButtonProps) {
     <TouchableOpacity onPress={() => { setClicked(true); props.onStart(); promptAsync(); }}>
       <SocialIcon
         title={props.title}
-        type='google'
+        type='facebook'
         button
         // light
         onPress={() => { setClicked(true); props.onStart(); promptAsync(); }}

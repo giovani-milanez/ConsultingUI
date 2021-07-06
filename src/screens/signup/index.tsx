@@ -20,6 +20,7 @@ import api from '../../plugins/axios'
 import { useAppDispatch } from '../../redux/hooks'
 import { login } from '../../redux/userSlice'
 import { GoogleButton } from '../../components/GoogleButton'
+import { FacebookButton } from '../../components/FacebookButton'
 
 
 type SignUpScreenNavigationProp = StackNavigationProp<RootStackParamList,'SignUp'>;
@@ -35,6 +36,7 @@ export function SignUp() {
   const [validName, setNameValid] = useState<boolean>(true);
   const [index, setIndex] = useState<number>(0);
   const [loading, setLoading] = useState<boolean>(false);
+  const [token, setToken] = useState<string>('');
 
   let emailInput = useRef<TextInput>(null);
   let passwordInput = useRef<TextInput>(null);
@@ -100,12 +102,78 @@ export function SignUp() {
     return nameCheck;
   };
 
-  const onGoogleSuccess = (token: string) => {
-
+  const onGoogleSuccess = async (token: string) => {
+    try {
+      const response = await api.post('/auth/signup/google', {
+        jwtIdToken: token,
+        isConsultant: index === 1
+      });
+      // reset state
+      setNameValid(true)
+      setPasswordValid(true)
+      setEmailValid(true)
+      setName('')
+      setEmail('')
+      setPassword('')
+      setIndex(0)
+      // update redux global state
+      dispatch(login({accessToken: response.data.accessToken, refreshToken: response.data.refreshToken}))
+      // navigate to home
+      navigation.navigate('Home')
+    } catch (_err) {
+      console.log(_err.response.data);
+      if (_err.response.status === 401) {
+        toast.show('Não foi possível criar a conta com Google', { type: 'danger', placement: 'top', duration: 5000 })
+      }
+      else {
+        toast.show(_err.response.data.message, { type: 'danger', placement: 'top', duration: 5000 })
+      }
+    }
   }
 
   const onGoogleError = () => {
     toast.show('Não foi possível criar a conta com Google', { type: 'danger', placement: 'top', duration: 5000 })
+  }
+
+  const onFacebookSuccess = async (token: string) => {
+    try {
+      setLoading(true)
+      const response = await api.post('/auth/signup/facebook', {
+        accessToken: token,
+        isConsultant: index === 1
+      });
+      // reset state
+      setNameValid(true)
+      setPasswordValid(true)
+      setEmailValid(true)
+      setName('')
+      setEmail('')
+      setPassword('')
+      setIndex(0)
+      // update redux global state
+      dispatch(login({accessToken: response.data.accessToken, refreshToken: response.data.refreshToken}))
+      // navigate to home
+      navigation.navigate('Home')
+    } catch (_err) {
+      console.log(_err.response);
+      if (_err.response) {
+        if (_err.response.status === 401) {
+          toast.show('Não foi possível criar a conta com Facebook', { type: 'danger', placement: 'top', duration: 5000 })
+        }
+        else {
+          toast.show(_err.response.data.message, { type: 'danger', placement: 'top', duration: 5000 })
+        }
+      }
+      else {
+        toast.show('Não foi possível criar a conta com Facebook', { type: 'danger', placement: 'top', duration: 5000 })
+      }
+    } finally {
+      setLoading(false)
+    }
+  }
+
+  const onFacebookError = () => {
+    toast.show('Não foi possível criar a conta com Facebook', { type: 'danger', placement: 'top', duration: 5000 })
   }
 
   return (
@@ -115,6 +183,7 @@ export function SignUp() {
           style={styles.image}
           resizeMode="cover"
         />
+        <Text>{token}</Text>
         <View style={styles.content}>
           <Input
             ref={nameInput}
@@ -193,6 +262,16 @@ export function SignUp() {
             loading={loading}
             onSucess={onGoogleSuccess}
             onError={onGoogleError}
+            onStart={() => setLoading(true)}
+            onEnd={() => setLoading(false)}
+          />
+          <FacebookButton
+            title="Criar conta com Facebook"
+            loading={loading}
+            onSucess={onFacebookSuccess}
+            onError={onFacebookError}
+            onStart={() => setLoading(true)}
+            onEnd={() => setLoading(false)}
           />
         </View>
       </View>
