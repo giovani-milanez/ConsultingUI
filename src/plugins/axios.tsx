@@ -50,7 +50,8 @@ api.interceptors.response.use(
             "refreshToken": store.getState().user.refreshToken
           })
         if (response.status === 200) {
-          store.dispatch(login({accessToken: response.data.accessToken, refreshToken: response.data.refreshToken}))
+          // store.dispatch(login({accessToken: response.data.accessToken, refreshToken: response.data.refreshToken}))
+          store.dispatch(login({accessToken: response.data.accessToken, refreshToken: response.data.refreshToken, expiration: response.data.expiration, info: response.data.user}))
           originalRequest.headers.Authorization = `Bearer ${response.data.accessToken}`
           //return originalRequest object with Axios.
           return api(originalRequest);

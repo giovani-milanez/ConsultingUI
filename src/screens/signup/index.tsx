@@ -43,7 +43,7 @@ export function SignUp() {
   let nameInput = useRef<TextInput>(null);
   const dispatch = useAppDispatch()
   const toast = useToast()
-  const buttons = ['Contrar Serviços', 'Prestar Serviços']
+  const buttons = ['Contratar Serviços', 'Prestar Serviços']
 
 
   const signup = async () => {
@@ -69,7 +69,7 @@ export function SignUp() {
         setPassword('')
         setIndex(0)
         // update redux global state
-        dispatch(login({accessToken: response.data.accessToken, refreshToken: response.data.refreshToken}))
+        dispatch(login({accessToken: response.data.accessToken, refreshToken: response.data.refreshToken, expiration: response.data.expiration, info: response.data.user}))
         // navigate to home
         navigation.navigate('Home')
       } catch (_err) {
@@ -102,12 +102,11 @@ export function SignUp() {
     return nameCheck;
   };
 
-  const onGoogleSuccess = async (token: string) => {
+  const signUpExternal = async (token: string, provider: string) => {
     try {
-      const response = await api.post('/auth/signup/google', {
-        jwtIdToken: token,
-        isConsultant: index === 1
-      });
+      const response = provider === 'google' ? 
+        await api.post(`/auth/signup/${provider}`, {jwtIdToken: token,isConsultant: index === 1}) :
+        await api.post(`/auth/signup/${provider}`, {accessToken: token,isConsultant: index === 1})
       // reset state
       setNameValid(true)
       setPasswordValid(true)
@@ -117,13 +116,13 @@ export function SignUp() {
       setPassword('')
       setIndex(0)
       // update redux global state
-      dispatch(login({accessToken: response.data.accessToken, refreshToken: response.data.refreshToken}))
+      dispatch(login({accessToken: response.data.accessToken, refreshToken: response.data.refreshToken, expiration: response.data.expiration, info: response.data.user}))
       // navigate to home
       navigation.navigate('Home')
     } catch (_err) {
       console.log(_err.response.data);
       if (_err.response.status === 401) {
-        toast.show('Não foi possível criar a conta com Google', { type: 'danger', placement: 'top', duration: 5000 })
+        toast.show(`Não foi possível criar a conta com ${provider}`, { type: 'danger', placement: 'top', duration: 5000 })
       }
       else {
         toast.show(_err.response.data.message, { type: 'danger', placement: 'top', duration: 5000 })
@@ -131,49 +130,8 @@ export function SignUp() {
     }
   }
 
-  const onGoogleError = () => {
-    toast.show('Não foi possível criar a conta com Google', { type: 'danger', placement: 'top', duration: 5000 })
-  }
-
-  const onFacebookSuccess = async (token: string) => {
-    try {
-      setLoading(true)
-      const response = await api.post('/auth/signup/facebook', {
-        accessToken: token,
-        isConsultant: index === 1
-      });
-      // reset state
-      setNameValid(true)
-      setPasswordValid(true)
-      setEmailValid(true)
-      setName('')
-      setEmail('')
-      setPassword('')
-      setIndex(0)
-      // update redux global state
-      dispatch(login({accessToken: response.data.accessToken, refreshToken: response.data.refreshToken}))
-      // navigate to home
-      navigation.navigate('Home')
-    } catch (_err) {
-      console.log(_err.response);
-      if (_err.response) {
-        if (_err.response.status === 401) {
-          toast.show('Não foi possível criar a conta com Facebook', { type: 'danger', placement: 'top', duration: 5000 })
-        }
-        else {
-          toast.show(_err.response.data.message, { type: 'danger', placement: 'top', duration: 5000 })
-        }
-      }
-      else {
-        toast.show('Não foi possível criar a conta com Facebook', { type: 'danger', placement: 'top', duration: 5000 })
-      }
-    } finally {
-      setLoading(false)
-    }
-  }
-
-  const onFacebookError = () => {
-    toast.show('Não foi possível criar a conta com Facebook', { type: 'danger', placement: 'top', duration: 5000 })
+  const onError = (provider: string) => {
+    toast.show(`Não foi possível criar a conta com ${provider}`, { type: 'danger', placement: 'top', duration: 5000 })
   }
 
   return (
@@ -260,18 +218,18 @@ export function SignUp() {
           <GoogleButton
             title="Criar conta com Google"
             loading={loading}
-            onSucess={onGoogleSuccess}
-            onError={onGoogleError}
+            onSucess={(token: string) => { signUpExternal(token, 'google') }}
+            onError={() => onError('google')}
             onStart={() => setLoading(true)}
-            onEnd={() => setLoading(false)}
+            onEnd={() => {}}
           />
           <FacebookButton
             title="Criar conta com Facebook"
             loading={loading}
-            onSucess={onFacebookSuccess}
-            onError={onFacebookError}
+            onSucess={(token: string) => { signUpExternal(token, 'facebook') }}
+            onError={() => onError('facebook')}
             onStart={() => setLoading(true)}
-            onEnd={() => setLoading(false)}
+            onEnd={() => {}}
           />
         </View>
       </View>

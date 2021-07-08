@@ -28,11 +28,24 @@ export const styles = StyleSheet.create({
     marginBottom: 16,
     marginTop: 8
   },
+  signupTextContainer: {
+    flexDirection: 'row',
+    justifyContent: 'center',
+    marginTop: 8
+  },
   signupText: {
     color: theme.colors.secondary,
     fontSize: 15,
     textAlign: 'center',
     marginTop: 8
+  },
+  signupTextBtn: {
+    color: theme.colors.secondary,
+    textAlign: 'center',
+    fontSize: 15,
+    marginTop: 8,
+    backgroundColor: theme.colors.blue,
+    borderRadius: 8
   },
   inputContainer: {
     paddingLeft: 8,

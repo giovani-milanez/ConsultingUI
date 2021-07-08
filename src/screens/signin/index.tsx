@@ -3,14 +3,14 @@ import React, { useRef, useState } from 'react'
 import { 
   View, 
   Text, 
-  Image,
   TouchableOpacity,
   Platform,
   KeyboardAvoidingView,
   TextInput,
-  ScrollView
+  ScrollView,
+  Image
 } from 'react-native'
-import { Input, Button, SocialIcon } from 'react-native-elements';
+import { Input, Button } from 'react-native-elements';
 import { StackNavigationProp } from '@react-navigation/stack';
 import { useNavigation } from '@react-navigation/native';
 import { useToast } from 'react-native-fast-toast'
@@ -24,11 +24,12 @@ import IllustrationImg from '../../../assets/adaptive-icon.png'
 import { styles } from './styles';
 import api from '../../plugins/axios'
 import { GoogleButton } from '../../components/GoogleButton'
+import { FacebookButton } from '../../components/FacebookButton'
 
 type SignInScreenNavigationProp = StackNavigationProp<RootStackParamList,'SignIn'>;
 
 export function SignIn() {
-  const [token, setToken] = useState<string>('');
+  const [key, setKey] = useState<number>(1);
   const [error, setError] = useState<string>('');
   const [email, setEmail] = useState<string>('');
   const [password, setPassword] = useState<string>('');
@@ -55,6 +56,38 @@ export function SignIn() {
     return passwordCheck;
   };
 
+  const signInExternal = async (token: string, provider: string) => {
+    setLoading(true)
+    try {
+      const response = provider === 'google' ? 
+        await api.post(`/auth/signin/${provider}`, { jwtIdToken: token }) :
+        await api.post(`/auth/signin/${provider}`, { accessToken: token });
+      // reset state
+      setPasswordValid(true)
+      setEmailValid(true)
+      setEmail('')
+      setPassword('')
+      // update redux global state
+      dispatch(login({accessToken: response.data.accessToken, refreshToken: response.data.refreshToken, expiration: response.data.expiration, info: response.data.user}))
+      // navigate to home
+      navigation.navigate('Home')
+    } catch (_err) {
+      if (_err.response) {
+        if (_err.response.status === 401) {
+          toast.show(`Não foi possível entrar com ${provider}`, { type: 'danger', placement: 'top', duration: 10000 })
+        }
+        else {
+          toast.show(_err.response.data.message, { type: 'danger', placement: 'top', duration: 10000 })
+        }
+      } else {
+        toast.show(`Não foi possível entrar com ${provider}`, { type: 'danger', placement: 'top', duration: 10000 })
+      }
+      setLoading(false)
+    } finally {
+      
+    }
+  }
+
   const signIn = async () => {
     const isValidEmail = validateEmail();
     const isValidPassword = validatePassword();    
@@ -72,14 +105,15 @@ export function SignIn() {
         setEmail('')
         setPassword('')
         // update redux global state
-        dispatch(login({accessToken: response.data.accessToken, refreshToken: response.data.refreshToken}))
+        dispatch(login({accessToken: response.data.accessToken, refreshToken: response.data.refreshToken, expiration: response.data.expiration, info: response.data.user}))
         // navigate to home
         navigation.navigate('Home')
       } catch (_err) {
         console.log(_err);
         toast.show('Usuário ou senha inválidos', { type: 'danger', placement: 'top'})
-      } finally {
         setLoading(false)
+      } finally {
+        
       }
     }
   };
@@ -92,11 +126,11 @@ export function SignIn() {
       <ScrollView>
         <View style={styles.container}>
           <Image 
-            source={IllustrationImg} 
+            source={IllustrationImg}
             style={styles.image}
             resizeMode="cover"
+            // PlaceholderContent={<ActivityIndicator />}
           />
-          <Text>{token}</Text>
           <View style={styles.content}>
             <Text>{error}</Text>
             <Text style={styles.title}>
@@ -158,25 +192,26 @@ export function SignIn() {
             <Text style={styles.subtitle}>
             ou
             </Text>
-            {/* <GoogleButton
-              title="Criar conta com Google"
+            <GoogleButton
+              title="Entrar com Google"
               loading={loading}
-              onSucess={onGoogleSuccess}
-              onError={onGoogleError}
+              onSucess={(token: string) => signInExternal(token, 'google')}
+              onError={() => { toast.show('Não foi possível entrar com Google', { type: 'danger', placement: 'top', duration: 5000 }) }}
+              onStart={() => setLoading(true)}
+              onEnd={() => {}}
+            />
+            <FacebookButton
+              title="Entrar com Facebook"
+              loading={loading}
+              onSucess={(token: string) => signInExternal(token, 'facebook')}
+              onError={() => toast.show('Não foi possível entrar com Facebook', { type: 'danger', placement: 'top', duration: 5000 })}
               onStart={() => setLoading(true)}
               onEnd={() => setLoading(false)}
             />
-            <FacebookButton
-              title="Criar conta com Facebook"
-              loading={loading}
-              onSucess={onFacebookSuccess}
-              onError={onFacebookError}
-              onStart={() => setLoading(true)}
-              onEnd={() => setLoading(false)}
-            /> */}
-            <Text style={styles.signupText}>
-            Não tem uma conta? Cadastre-se
-            </Text>
+            <View style={styles.signupTextContainer}>
+              <Text style={styles.signupText}> Não tem uma conta? </Text>
+              <TouchableOpacity onPress={() => navigation.navigate('SignUp')} ><Text style={styles.signupTextBtn}> Cadastre-se </Text></TouchableOpacity>
+            </View>
           </View>
         </View>
       </ScrollView>      

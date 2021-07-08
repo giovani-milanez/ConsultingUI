@@ -1,10 +1,11 @@
 import React  from 'react';
-import { View, Text } from 'react-native'
 import { Provider } from 'react-redux'
 import { ThemeProvider } from 'react-native-elements';
 import { NavigationContainer } from '@react-navigation/native';
-import { createStackNavigator, StackScreenProps } from '@react-navigation/stack';
+import { createStackNavigator } from '@react-navigation/stack';
 import { ToastProvider } from 'react-native-fast-toast'
+import { PersistGate } from 'redux-persist/integration/react'
+import { persistStore } from 'redux-persist'
 
 import { navigationRef } from './src/screens/RootNavigation';
 import store from './src/redux/store'
@@ -27,33 +28,40 @@ const MyTheme = {
   },
 };
 
+let persistor = persistStore(store);
+
 export default function App() {
   return (
     <Provider store={store}>
-      <ThemeProvider theme={theme}>
-        <ToastProvider 
-          offset={100}
-          placement="top"
-        >
-          <NavigationContainer theme={MyTheme} ref={navigationRef}>
-            <Stack.Navigator 
-              initialRouteName="SignUp"
-              screenOptions={{
-                headerStyle: {
-                  backgroundColor: theme.colors.primary,
-                },
-                headerTintColor: theme.colors.secondary,
-                headerTitleStyle: {
-                  fontWeight: 'normal',
-                },
-              }}>
-              <Stack.Screen name="SignIn" component={SignIn} options={{ title: 'Entrar' }} />
-              <Stack.Screen name="SignUp" component={SignUp} options={{ title: 'Criar conta' }} />
-              <Stack.Screen name="Home" component={Home} />
-            </Stack.Navigator>
-          </NavigationContainer>
-        </ToastProvider>        
-      </ThemeProvider>
+      <PersistGate loading={null} persistor={persistor}>        
+        <ThemeProvider theme={theme}>
+          <ToastProvider 
+            offset={100}
+            placement="top"
+          >
+            <NavigationContainer theme={MyTheme} ref={navigationRef}>
+              <Stack.Navigator 
+                initialRouteName="Home"
+                screenOptions={{
+                  headerStyle: {
+                    // backgroundColor: Platform.OS === 'web' ? theme.mainContainer.backgroundColor : theme.mainContainer.backgroundColor,
+                    backgroundColor: theme.colors.primary
+                    
+                  },
+                  headerTintColor: theme.colors.secondary,
+                  headerTitleStyle: {
+                    fontWeight: 'normal',
+                  },
+                  // headerTitle:  (props: StackHeaderTitleProps) => { return <HeaderTitle {...props}/> }
+                }}>
+                <Stack.Screen name="SignIn" component={SignIn} options={{ title: 'Entrar' }} />
+                <Stack.Screen name="SignUp" component={SignUp} options={{ title: 'Criar conta' }} />
+                <Stack.Screen name="Home" component={Home} options={{ title: 'Inicio' }} />
+              </Stack.Navigator>
+            </NavigationContainer>
+          </ToastProvider>        
+        </ThemeProvider>
+      </PersistGate>
     </Provider>    
   )
 }

@@ -15,7 +15,8 @@ export const theme = {
   dark: false,
   colors: {
     primary: primary,
-    secondary: secondary
+    secondary: secondary,
+    blue: blue
   },
   mainContainer: {
     backgroundColor: backgroundColor,
