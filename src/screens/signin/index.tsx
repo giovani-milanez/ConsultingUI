@@ -25,12 +25,11 @@ import { styles } from './styles';
 import api from '../../plugins/axios'
 import { GoogleButton } from '../../components/GoogleButton'
 import { FacebookButton } from '../../components/FacebookButton'
+import { CustomHeader } from '../../components/CustomHeader';
 
 type SignInScreenNavigationProp = StackNavigationProp<RootStackParamList,'SignIn'>;
 
 export function SignIn() {
-  const [key, setKey] = useState<number>(1);
-  const [error, setError] = useState<string>('');
   const [email, setEmail] = useState<string>('');
   const [password, setPassword] = useState<string>('');
   const [validEmail, setEmailValid] = useState<boolean>(true);
@@ -124,6 +123,7 @@ export function SignIn() {
       behavior={Platform.OS === "ios" ? "padding" : undefined}
     >
       <ScrollView>
+        <CustomHeader title="Entrar" />
         <View style={styles.container}>
           <Image 
             source={IllustrationImg}
@@ -132,7 +132,6 @@ export function SignIn() {
             // PlaceholderContent={<ActivityIndicator />}
           />
           <View style={styles.content}>
-            <Text>{error}</Text>
             <Text style={styles.title}>
               Plataforma de {`\n`}
               consultoria online

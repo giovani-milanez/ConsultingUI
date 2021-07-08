@@ -58,5 +58,6 @@ export const { logout, login } = userSlice.actions
 
 // Other code such as selectors can use the imported `RootState` type
 export const isLoggedIn = (state: RootState) => state.user.accessToken ? true : false
+export const firstName = (state: RootState) => state.user.info.name.indexOf(' ') !== -1 ? state.user.info.name.split(' ').slice(0, -1).join(' ') : state.user.info.name
 
 export default userSlice.reducer

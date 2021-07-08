@@ -3,6 +3,7 @@ import { Provider } from 'react-redux'
 import { ThemeProvider } from 'react-native-elements';
 import { NavigationContainer } from '@react-navigation/native';
 import { createStackNavigator } from '@react-navigation/stack';
+import { createDrawerNavigator } from '@react-navigation/drawer';
 import { ToastProvider } from 'react-native-fast-toast'
 import { PersistGate } from 'redux-persist/integration/react'
 import { persistStore } from 'redux-persist'
@@ -13,8 +14,10 @@ import { theme } from "./src/global/theme"
 import { SignIn } from './src/screens/signin';
 import { SignUp } from './src/screens/signup';
 import { Home } from './src/screens/home';
-
-const Stack = createStackNavigator<RootStackParamList>();
+import { CustomDrawerContent } from './src/components/CustomDrawerContent';
+import { useAppSelector } from './src/redux/hooks';
+import { isLoggedIn } from './src/redux/userSlice';
+import { AppNavigator } from './src/components/AppNavigator';
 
 const MyTheme = {
   dark: false,
@@ -27,10 +30,12 @@ const MyTheme = {
     notification: 'rgb(255, 69, 58)'
   },
 };
-
-let persistor = persistStore(store);
+// const Stack = createStackNavigator<RootStackParamList>();
+const Drawer = createDrawerNavigator<RootStackParamList>();
+const persistor = persistStore(store);
 
 export default function App() {
+  // const loggedIn = useAppSelector(isLoggedIn)
   return (
     <Provider store={store}>
       <PersistGate loading={null} persistor={persistor}>        
@@ -40,24 +45,7 @@ export default function App() {
             placement="top"
           >
             <NavigationContainer theme={MyTheme} ref={navigationRef}>
-              <Stack.Navigator 
-                initialRouteName="Home"
-                screenOptions={{
-                  headerStyle: {
-                    // backgroundColor: Platform.OS === 'web' ? theme.mainContainer.backgroundColor : theme.mainContainer.backgroundColor,
-                    backgroundColor: theme.colors.primary
-                    
-                  },
-                  headerTintColor: theme.colors.secondary,
-                  headerTitleStyle: {
-                    fontWeight: 'normal',
-                  },
-                  // headerTitle:  (props: StackHeaderTitleProps) => { return <HeaderTitle {...props}/> }
-                }}>
-                <Stack.Screen name="SignIn" component={SignIn} options={{ title: 'Entrar' }} />
-                <Stack.Screen name="SignUp" component={SignUp} options={{ title: 'Criar conta' }} />
-                <Stack.Screen name="Home" component={Home} options={{ title: 'Inicio' }} />
-              </Stack.Navigator>
+              <AppNavigator />
             </NavigationContainer>
           </ToastProvider>        
         </ThemeProvider>

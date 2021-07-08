@@ -21,6 +21,7 @@ import { useAppDispatch } from '../../redux/hooks'
 import { login } from '../../redux/userSlice'
 import { GoogleButton } from '../../components/GoogleButton'
 import { FacebookButton } from '../../components/FacebookButton'
+import { CustomHeader } from '../../components/CustomHeader';
 
 
 type SignUpScreenNavigationProp = StackNavigationProp<RootStackParamList,'SignUp'>;
@@ -135,102 +136,105 @@ export function SignUp() {
   }
 
   return (
-      <View style={styles.container}>
-        <Image 
-          source={IllustrationImg} 
-          style={styles.image}
-          resizeMode="cover"
-        />
-        <Text>{token}</Text>
-        <View style={styles.content}>
-          <Input
-            ref={nameInput}
-            value={name}
-            onChangeText={(text: string) => setName(text)}
-            placeholder="Nome"
-            returnKeyType="next"
-            errorMessage={validName ? '' : 'Nome muito curto'}
-            onSubmitEditing={() => {
-              const isValid = validateName();
-              if (isValid)
-                emailInput.current?.focus();
-            }}
-            autoFocus={false}
-            autoCapitalize="none"
-            keyboardAppearance="dark"
-            autoCorrect={false}
-            blurOnSubmit={false}
+      <View>
+        <CustomHeader title="Criar Conta" />
+        <View style={styles.container}>
+          <Image 
+            source={IllustrationImg} 
+            style={styles.image}
+            resizeMode="cover"
           />
-          <Input
-            ref={emailInput}
-            value={email}
-            onChangeText={(text: string) => setEmail(text)}
-            placeholder="Email"
-            keyboardType="email-address"
-            returnKeyType="next"
-            errorMessage={validEmail ? '' : 'Email inválido'}
-            onSubmitEditing={() => {
-              const isValid = validateEmail();
-              if (isValid)
-                passwordInput.current?.focus();
-            }}
-          />
-          <Input
-            ref={passwordInput}
-            value={password}
-            onChangeText={(text: string) => setPassword(text)}
-            placeholder="Senha"
-            secureTextEntry
-            returnKeyType="go"
-            errorMessage={
-              validPassword ? '' : 'Mínimo de 6 caracteres'
-            }
-            onSubmitEditing={() => {
-              const isValid = validatePassword();
-              if (isValid)
-                signup()
-            }}
-            autoFocus={false}
-            autoCapitalize="none"
-            keyboardAppearance="dark"
-            autoCorrect={false}
-            blurOnSubmit={false}
-          />
-          <Text style={styles.subtitle}>
-           O que você busca ?
-          </Text>
-          <ButtonGroup
-            onPress={setIndex}
-            selectedIndex={index}
-            buttons={buttons}
-          />
-          <TouchableOpacity onPress={() => signup()}>
-            <Button
-              title="Criar conta"
-              onPress={() => signup()}
-              loading={loading}
-              disabled={loading}
+          <Text>{token}</Text>
+          <View style={styles.content}>
+            <Input
+              ref={nameInput}
+              value={name}
+              onChangeText={(text: string) => setName(text)}
+              placeholder="Nome"
+              returnKeyType="next"
+              errorMessage={validName ? '' : 'Nome muito curto'}
+              onSubmitEditing={() => {
+                const isValid = validateName();
+                if (isValid)
+                  emailInput.current?.focus();
+              }}
+              autoFocus={false}
+              autoCapitalize="none"
+              keyboardAppearance="dark"
+              autoCorrect={false}
+              blurOnSubmit={false}
             />
-          </TouchableOpacity>
-          <Text style={styles.subtitle}>
-           ou
-          </Text>
-          <GoogleButton
-            title="Criar conta com Google"
-            loading={loading}
-            onSucess={(token: string) => { signUpExternal(token, 'google') }}
-            onError={() => onError('google')}
-            onStart={() => setLoading(true)}
-            onEnd={() => {}}
-          />
-          <FacebookButton
-            title="Criar conta com Facebook"
-            loading={loading}
-            onSucess={(token: string) => { signUpExternal(token, 'facebook') }}
-            onError={() => onError('facebook')}
-            onStart={() => setLoading(true)}
-            onEnd={() => {}}
-          />
+            <Input
+              ref={emailInput}
+              value={email}
+              onChangeText={(text: string) => setEmail(text)}
+              placeholder="Email"
+              keyboardType="email-address"
+              returnKeyType="next"
+              errorMessage={validEmail ? '' : 'Email inválido'}
+              onSubmitEditing={() => {
+                const isValid = validateEmail();
+                if (isValid)
+                  passwordInput.current?.focus();
+              }}
+            />
+            <Input
+              ref={passwordInput}
+              value={password}
+              onChangeText={(text: string) => setPassword(text)}
+              placeholder="Senha"
+              secureTextEntry
+              returnKeyType="go"
+              errorMessage={
+                validPassword ? '' : 'Mínimo de 6 caracteres'
+              }
+              onSubmitEditing={() => {
+                const isValid = validatePassword();
+                if (isValid)
+                  signup()
+              }}
+              autoFocus={false}
+              autoCapitalize="none"
+              keyboardAppearance="dark"
+              autoCorrect={false}
+              blurOnSubmit={false}
+            />
+            <Text style={styles.subtitle}>
+            O que você busca ?
+            </Text>
+            <ButtonGroup
+              onPress={setIndex}
+              selectedIndex={index}
+              buttons={buttons}
+            />
+            <TouchableOpacity onPress={() => signup()}>
+              <Button
+                title="Criar conta"
+                onPress={() => signup()}
+                loading={loading}
+                disabled={loading}
+              />
+            </TouchableOpacity>
+            <Text style={styles.subtitle}>
+            ou
+            </Text>
+            <GoogleButton
+              title="Criar conta com Google"
+              loading={loading}
+              onSucess={(token: string) => { signUpExternal(token, 'google') }}
+              onError={() => onError('google')}
+              onStart={() => setLoading(true)}
+              onEnd={() => {}}
+            />
+            <FacebookButton
+              title="Criar conta com Facebook"
+              loading={loading}
+              onSucess={(token: string) => { signUpExternal(token, 'facebook') }}
+              onError={() => onError('facebook')}
+              onStart={() => setLoading(true)}
+              onEnd={() => {}}
+            />
+          </View>
         </View>
       </View>
   )
