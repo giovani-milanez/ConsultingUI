@@ -16,19 +16,20 @@ import { useAppSelector } from '../../redux/hooks'
 import { isLoggedIn, firstName } from '../../redux/userSlice'
 import { HomeScreenNavigationProp } from "../../navigation";
 import { theme } from "../../global/theme";
+import Constants from 'expo-constants';
 
 function LeftComponent(props : CustomHeaderProps) {
   const navigation = useNavigation<HomeScreenNavigationProp>()
   return (
     <TouchableOpacity onPress={() => {navigation.toggleDrawer()}}>
-      <Icon onPress={() => {navigation.toggleDrawer()}} name="menu" color='#fff' style={{color: '#fff'}} />
+      <Icon onPress={() => {navigation.toggleDrawer()}} name="menu" color={theme.colors.background} style={{color: theme.colors.background}} />
     </TouchableOpacity>
   )
 }
 
 function CenterComponent(props : CustomHeaderProps) {
   return (
-    <Text style={{color: theme.colors.secondary, fontSize: 18}}>{props.title}</Text>
+    <Text style={{color: theme.colors.background, fontSize: 18}}>{props.title}</Text>
   )
 }
 
@@ -48,7 +49,7 @@ function RightComponent(props : CustomHeaderProps) {
     <View style={{flexDirection:'row', alignItems: 'center', paddingRight: 10}}>
       <Button 
         containerStyle={{marginRight: 10, marginBottom: 0, backgroundColor: '#1F7CE9', borderRadius: 3, height: 40}} 
-        buttonStyle={{backgroundColor: '#1F7CE9' }} 
+        buttonStyle={{backgroundColor: '#1F7CE9' }}    
         onPress={() => navigation.navigate('SignIn')} title="Entrar" />
     </View> :
     <View>
@@ -70,6 +71,7 @@ interface CustomHeaderProps {
 export function CustomHeader(props : CustomHeaderProps) {  
   return (
     <Header
+      containerStyle={{height:  Constants.statusBarHeight + 60, borderBottomColor: theme.colors.blue, borderBottomWidth: 2}}
       leftComponent={<LeftComponent {...props} />}
       leftContainerStyle={{justifyContent: 'center'}}
       centerComponent={<CenterComponent {...props} />}

@@ -13,6 +13,19 @@ import { SignUp } from "../../screens/signup";
 
 const Drawer = createDrawerNavigator<RootStackParamList>();
 
+export const linking = {
+  prefixes: [
+    /* your linking prefixes */
+  ],
+  config: {
+    screens: {
+      Home: '',
+      SignIn: 'entrar',
+      SignUp: 'cadastrar'
+    }
+  },
+};
+
 export function AppNavigator() {
   const loggedIn = useAppSelector(isLoggedIn)
   const dimensions = useWindowDimensions();

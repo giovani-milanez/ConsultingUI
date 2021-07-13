@@ -10,7 +10,7 @@ import {
   ScrollView,
   Image
 } from 'react-native'
-import { Input, Button } from 'react-native-elements';
+import { Input, Button, Divider } from 'react-native-elements';
 import { StackNavigationProp } from '@react-navigation/stack';
 import { useNavigation } from '@react-navigation/native';
 import { useToast } from 'react-native-fast-toast'
@@ -188,9 +188,12 @@ export function SignIn() {
                 disabled={loading}
               />
             </TouchableOpacity>
-            <Text style={styles.subtitle}>
-            ou
-            </Text>
+            <View style={{flexDirection: 'row', justifyContent: 'center'}}>
+                <Divider style={{alignSelf: 'center', width: '25%'}} orientation="horizontal" />
+                <Text style={styles.subtitle}> ou </Text>
+                <Divider style={{alignSelf: 'center', width: '25%'}} orientation="horizontal" />
+            </View>
+            
             <GoogleButton
               title="Entrar com Google"
               loading={loading}

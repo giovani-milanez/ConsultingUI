@@ -7,8 +7,8 @@
 //   }
 // }
 const primary = '#F87E0E';
-const secondary = '#DDE3F0';
-const backgroundColor = '#293046';
+const secondary = '#01122e';
+const backgroundColor = '#f7faff';
 const blue = '#1F7CE9'
 
 export const theme = {
@@ -16,15 +16,16 @@ export const theme = {
   colors: {
     primary: primary,
     secondary: secondary,
-    blue: blue
+    blue: blue,
+    background: backgroundColor
   },
-  mainContainer: {
-    backgroundColor: backgroundColor,
-    flexGrow: 1,
-    paddingBottom: 20,
-    paddingTop: 20,    
-    width: '100%'
-  },
+  // mainContainer: {
+  //   backgroundColor: backgroundColor,
+  //   flexGrow: 1,
+  //   paddingBottom: 20,
+  //   paddingTop: 20,    
+  //   width: '100%'
+  // },
   Button: {
     loadingProps: {
       color: blue,
@@ -39,7 +40,7 @@ export const theme = {
     titleStyle: {
       flex: 1,
       fontSize: 15,
-      color: secondary
+      color: backgroundColor
     },
     containerStyle: {
       width: '100%',
