@@ -10,6 +10,7 @@ import { isLoggedIn } from "../../redux/userSlice";
 import { SignIn } from "../../screens/signin";
 import { Home } from "../../screens/home";
 import { SignUp } from "../../screens/signup";
+import { FindServices } from "../../screens/find-services";
 
 const Drawer = createDrawerNavigator<RootStackParamList>();
 
@@ -21,7 +22,8 @@ export const linking = {
     screens: {
       Home: '',
       SignIn: 'entrar',
-      SignUp: 'cadastrar'
+      SignUp: 'cadastrar',
+      FindServices: 'servicos'
     }
   },
 };
@@ -48,6 +50,7 @@ export function AppNavigator() {
         ) : (
           <>
             <Drawer.Screen name="Home" component={Home} options={{ title: 'Inicio' }} />
+            <Drawer.Screen name="FindServices" component={FindServices} options={{ title: 'Serviços' }} />
             <Drawer.Screen name="SignIn" component={SignIn} options={{ title: 'Entrar' }} />
             <Drawer.Screen name="SignUp" component={SignUp} options={{ title: 'Criar conta' }} />
           </>
