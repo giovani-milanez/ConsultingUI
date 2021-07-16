@@ -46,6 +46,7 @@ function LoggedOutHome() {
         caption="Crie seu serviço online, do pagamento ao atendimento 100% pela plataforma"
         width={ Platform.OS == 'web' ? (Dimensions.get('window').width / 2) - 8  : Dimensions.get('window').width }
         height={ Platform.OS == 'web' ? finalHeight - 60  : (finalHeight / 2) }
+        onPress={() => navigation.navigate('Pricing')}
       />
       <Tile
         imageSrc={require('../../assets/cliente.jpg')}
