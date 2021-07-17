@@ -37,10 +37,17 @@ export const theme = {
     disabledStyle: {
       backgroundColor: primary,
     },
-    titleStyle: {
-      flex: 1,
-      fontSize: 15,
-      color: backgroundColor
+    // titleStyle: {
+    //   flex: 1,
+    //   fontSize: 18,
+    //   color: backgroundColor
+    // },
+    titleProps: {
+      style: {
+        fontSize: 15,
+        fontWeight: 'normal',
+        color: backgroundColor
+      }
     },
     containerStyle: {
       width: '100%',
@@ -51,7 +58,7 @@ export const theme = {
       justifyContent: 'center',
       backgroundColor: primary,
       marginTop: 0,
-      marginBottom: 10,
+      marginBottom: 0,
       marginRight: 0,
       marginLeft: 0
     },

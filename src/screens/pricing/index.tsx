@@ -24,7 +24,7 @@ export function Pricing() {
           color={theme.colors.primary}
           title="Você só paga se vender"
           price="9.99%"
-          info={['Crie serviços completos e customizados', 'Workflow único', 'Histórico de atendimentos', 'Receba pela plataforma']}
+          info={['Crie serviços completos e customizados', 'Workflow único', 'Histórico de atendimentos', 'Receba pela plataforma', 'vídeos, chat, formulários, agenda, testes e muito mais!']}
           button={{ title: 'Criar conta'}}
           onButtonPress={() => { navigation.navigate('SignUp') }}
         />

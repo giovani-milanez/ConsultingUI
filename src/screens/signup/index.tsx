@@ -4,7 +4,10 @@ import {
   Text, 
   Image,
   TouchableOpacity,
-  TextInput
+  TextInput,
+  KeyboardAvoidingView,
+  ScrollView,
+  Platform
 } from 'react-native'
 
 // import IllustrationImg from '../../assets/girha_220.png'
@@ -136,7 +139,11 @@ export function SignUp() {
   }
 
   return (
-      <View>
+    <KeyboardAvoidingView
+      enabled
+      behavior={Platform.OS === "ios" ? "padding" : undefined}
+    >
+      <ScrollView>
         <CustomHeader title="Criar Conta" />
         <View style={styles.container}>
           <Image 
@@ -215,7 +222,7 @@ export function SignUp() {
                 disabled={loading}
               />
             </TouchableOpacity>
-            <Text style={styles.subtitle}>
+            <Text style={{fontSize: 15, textAlign: 'center',}}>
             ou
             </Text>
             <GoogleButton
@@ -236,6 +243,7 @@ export function SignUp() {
             />
           </View>
         </View>
-      </View>
+      </ScrollView>
+    </KeyboardAvoidingView>
   )
 }

@@ -38,7 +38,7 @@ function LoggedOutHome() {
     <View style={{flex: 0, flexDirection:  Platform.OS == 'web' ? 'row'  : 'column'}}>
       <Tile
         imageSrc={require('../../assets/consultor.jpg')}
-        imageProps={{resizeMode: 'stretch'}}
+        imageProps={{resizeMode: 'cover'}}
         titleStyle={{fontSize: Platform.OS == 'web' ? 60 : 40, fontWeight: 'bold', textShadowColor: '#000000', textShadowRadius: 10}}
         captionStyle={{fontSize: Platform.OS == 'web' ? 24 : 18, fontWeight: 'bold', textShadowColor: '#000000', textShadowRadius: 10}}
         title="Consultor"
@@ -50,7 +50,7 @@ function LoggedOutHome() {
       />
       <Tile
         imageSrc={require('../../assets/cliente.jpg')}
-        imageProps={{resizeMode: 'stretch'}}
+        imageProps={{resizeMode: 'cover'}}
         titleStyle={{fontSize: Platform.OS == 'web' ? 60 : 40, fontWeight: 'bold', textShadowColor: '#000000', textShadowRadius: 10}}
         captionStyle={{fontSize: Platform.OS == 'web' ? 24 : 18, fontWeight: 'bold', textShadowColor: '#000000', textShadowRadius: 10}}
         title="Cliente"
