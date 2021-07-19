@@ -12,6 +12,7 @@ import { Home } from "../../screens/home";
 import { SignUp } from "../../screens/signup";
 import { FindServices } from "../../screens/find-services";
 import { Pricing } from "../../screens/pricing";
+import { Consultant } from "../../screens/consultant";
 
 const Drawer = createDrawerNavigator<RootStackParamList>();
 
@@ -25,7 +26,8 @@ export const linking = {
       SignIn: 'entrar',
       SignUp: 'cadastrar',
       FindServices: 'servicos',
-      Pricing: 'seja-consultor'
+      Pricing: 'seja-consultor',
+      Consultant: 'consultant/:id'
     }
   },
 };
@@ -54,6 +56,7 @@ export function AppNavigator() {
             <Drawer.Screen name="Home" component={Home} options={{ title: 'Inicio' }} />
             <Drawer.Screen name="FindServices" component={FindServices} options={{ title: 'Serviços' }} />
             <Drawer.Screen name="Pricing" component={Pricing} options={{ title: 'Seja um consultor' }} />
+            <Drawer.Screen name="Consultant" component={Consultant} options={{ title: 'Consultor' }} />
             <Drawer.Screen name="SignIn" component={SignIn} options={{ title: 'Entrar' }} />
             <Drawer.Screen name="SignUp" component={SignUp} options={{ title: 'Criar conta' }} />
           </>

@@ -3,5 +3,8 @@ type RootStackParamList = {
   SignIn: undefined,
   SignUp: undefined,
   FindServices: undefined,
-  Pricing: undefined
+  Pricing: undefined,
+  Consultant: {
+    id: number
+  }
 };
