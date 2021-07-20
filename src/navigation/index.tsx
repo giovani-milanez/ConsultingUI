@@ -8,8 +8,14 @@ export type FindServicesScreenNavigationProp = DrawerNavigationProp<RootStackPar
 
 export type ConsultantScreenNavigationProp = DrawerNavigationProp<RootStackParamList,'Consultant'>;
 export type ConsultantScreenRouteProp = RouteProp<RootStackParamList, 'Consultant'>;
-
 export type ConsultantScreenProps = {
   route: ConsultantScreenRouteProp,
   navigation: ConsultantScreenNavigationProp
+};
+
+export type ServiceScreenNavigationProp = DrawerNavigationProp<RootStackParamList,'Service'>;
+export type ServiceScreenRouteProp = RouteProp<RootStackParamList, 'Service'>;
+export type ServiceScreenProps = {
+  route: ServiceScreenRouteProp,
+  navigation: ServiceScreenNavigationProp
 };

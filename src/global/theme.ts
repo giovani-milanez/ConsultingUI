@@ -26,6 +26,9 @@ export const theme = {
   //   paddingTop: 20,    
   //   width: '100%'
   // },
+  Rating: {
+    tintColor: backgroundColor
+  },
   Button: {
     loadingProps: {
       color: blue,

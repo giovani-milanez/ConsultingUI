@@ -6,5 +6,8 @@ type RootStackParamList = {
   Pricing: undefined,
   Consultant: {
     id: number
+  },
+  Service: {
+    id: number
   }
 };
