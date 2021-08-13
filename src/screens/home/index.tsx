@@ -3,22 +3,35 @@ import {
   View,
   Text,
   Dimensions,
-  Platform
+  Platform,
+  TouchableOpacity
 } from 'react-native'
-import { Tile } from 'react-native-elements';
+import { Tile, Button } from 'react-native-elements';
 import Constants from 'expo-constants';
 
 import { CustomHeader } from '../../components/CustomHeader';
 import { useAppSelector } from '../../redux/hooks';
 import { isLoggedIn } from '../../redux/userSlice';
 import { useNavigation } from '@react-navigation/native';
-import { FindServicesScreenNavigationProp } from '../../navigation';
+import { FindServicesScreenNavigationProp, MyServicesScreenNavigationProp } from '../../navigation';
+import { theme } from '../../global/theme';
 
 
 function ConsultantHome() {
+  const navigation = useNavigation<MyServicesScreenNavigationProp>();
+  const myServices = () => {
+    navigation.navigate('MyServices')
+  }
   return (
-    <View>
-      <Text>Bem vindo, você é um consultor</Text>
+    <View style={{ alignItems:'center', padding: 50 }}>
+      {/* <TouchableOpacity onPress={() => myServices()}> */}
+        <Button
+          title="Meus Serviços"
+          containerStyle={{ width: '50%', backgroundColor: theme.colors.secondary }}
+          buttonStyle={{backgroundColor: theme.colors.secondary}}
+          onPress={() => myServices()}
+        />
+      {/* </TouchableOpacity> */}
     </View>
   )
 }

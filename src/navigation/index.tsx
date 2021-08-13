@@ -19,3 +19,10 @@ export type ServiceScreenProps = {
   route: ServiceScreenRouteProp,
   navigation: ServiceScreenNavigationProp
 };
+
+export type MyServicesScreenNavigationProp = DrawerNavigationProp<RootStackParamList,'MyServices'>;
+export type MyServicesScreenRouteProp = RouteProp<RootStackParamList, 'MyServices'>;
+export type MyServicesScreenProps = {
+  route: MyServicesScreenRouteProp,
+  navigation: MyServicesScreenNavigationProp
+};

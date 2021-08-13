@@ -9,5 +9,8 @@ type RootStackParamList = {
   },
   Service: {
     id: number
+  },
+  MyServices: {
+    id: number?
   }
 };

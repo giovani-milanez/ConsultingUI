@@ -5,7 +5,7 @@ import { createDrawerNavigator } from "@react-navigation/drawer";
 import { CustomDrawerContent } from "../CustomDrawerContent";
 
 import { useAppSelector } from "../../redux/hooks";
-import { isLoggedIn } from "../../redux/userSlice";
+import { isLoggedIn, isConsultant } from "../../redux/userSlice";
 
 import { SignIn } from "../../screens/signin";
 import { Home } from "../../screens/home";
@@ -14,6 +14,7 @@ import { FindServices } from "../../screens/find-services";
 import { Pricing } from "../../screens/pricing";
 import { Consultant } from "../../screens/consultant";
 import { ServiceScreen } from "../../screens/service";
+import { MyServicesScreen } from "../../screens/my-services";
 
 const Drawer = createDrawerNavigator<RootStackParamList>();
 
@@ -29,13 +30,20 @@ export const linking = {
       FindServices: 'servicos',
       Pricing: 'seja-consultor',
       Consultant: 'consultant/:id',
-      Service: 'service/:id'
+      Service: 'service/:id',
+      MyServices: {
+        path: 'meus-servicos/:id?',
+        parse: {
+          id: Number
+        }
+      }
     }
   },
 };
 
 export function AppNavigator() {
   const loggedIn = useAppSelector(isLoggedIn)
+  const isUserConsultant = useAppSelector(isConsultant)
   const dimensions = useWindowDimensions();
 
   const isLargeScreen = dimensions.width >= 768;
@@ -50,9 +58,16 @@ export function AppNavigator() {
     >
       {
         loggedIn ? (
-          <>
-            <Drawer.Screen name="Home" component={Home} options={{ title: 'Inicio' }} />
-          </>
+          isUserConsultant ? (
+            <>
+              <Drawer.Screen name="Home" component={Home} options={{ title: 'Inicio' }} />
+              <Drawer.Screen name="MyServices" component={MyServicesScreen} options={{ title: 'Meus Serviços' }} />
+            </>
+          ) : (
+            <>
+              <Drawer.Screen name="Home" component={Home} options={{ title: 'Inicio' }} />
+            </>
+          )          
         ) : (
           <>
             <Drawer.Screen name="Home" component={Home} options={{ title: 'Inicio' }} />
