@@ -41,7 +41,8 @@ export function CustomDrawerContent(props: DrawerContentComponentProps) {
       dispatch(logout());
       props.navigation.navigate('Home')
     } catch (_err) {
-      toast.show('Falha ao sair', { type: 'danger', placement: 'top'})
+      if (_err.response.status !== 401)
+        toast.show('Falha ao sair', { type: 'danger', placement: 'top'})
       setLoading(false)
     } finally {      
     }

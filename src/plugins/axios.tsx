@@ -2,7 +2,7 @@ import axios from 'axios';
 import { Platform } from 'react-native';
 
 import store from '../redux/store';
-import { login } from '../redux/userSlice'
+import { login, logout } from '../redux/userSlice'
 import * as RootNavigation from '../screens/RootNavigation';
 
 
@@ -58,6 +58,7 @@ api.interceptors.response.use(
         }
       }
       catch(ex) {
+        store.dispatch(logout())
         RootNavigation.navigate('SignIn');
       }
     }

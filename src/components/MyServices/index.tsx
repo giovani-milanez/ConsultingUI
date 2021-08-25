@@ -1,77 +1,56 @@
-import React, { useEffect, useState } from "react";
-import { View, Text } from "react-native";
+import React from "react";
+import { View, Platform } from "react-native";
+import { ListItem } from "react-native-elements";
 
 import { Service } from "../ServiceCard";
-import api from "../../plugins/axios";
-import { MyServicesScreenProps } from "../../navigation";
-import { useFocusEffect } from "@react-navigation/native";
+import { theme } from "../../global/theme";
+import { MyServicesScreenNavigationProp } from "../../navigation";
 
-export function MyServices({ route, navigation } : MyServicesScreenProps) {
-  const [loading, setLoading] = useState(true);
-  const [services, setServices] = useState<Service[]>([]);
-  
-  const findServices = () => {
-    setLoading(true)
-    api.get(`/service`)
-    .then((res) => {
-      setServices(res.data)
-    })
-    .finally(() => {
-      setLoading(false)
-    })
-  }
- 
-  useFocusEffect(
-    React.useCallback(() => {
-      findServices()
+interface MyServicesProps {
+  navigation: MyServicesScreenNavigationProp,
+  services: Service[]
+}
 
-      return () => {
-        // navigation.setParams({id: undefined});
-      };
-    }, [route])
-  ); 
-
-  if (loading) {
-    return (
-      <View>
-        <Text>Loading...</Text>
-      </View>
-    )
-  }
-  
-  if (!services.length) {
-    return (
-      <View>
-        <Text>Nenhum servico registrado</Text>
-        <Text>Crie um servico</Text>
-      </View>
-    )
-  }
-
-  if (route.params) {
-    const foundService = services.find(x => x.id === route.params.id)
-    return (
-      <View>
-        {
-          foundService ? (
-          <>
-            <Text>Selecionado: { foundService?.title } </Text>
-          </>) : (
-          <>
-            <Text>Servico nao encontrado</Text>
-          </>)
-        }        
-      </View>
-    )
-  }
+export function MyServices(props : MyServicesProps) {
 
   return (
-    <View>
-       {services.map(service => 
-        <View key={service.id}>
-          <Text>{service.title}</Text>
-        </View>
-       )}
+    <View style={{flexDirection: 'row'}}>
+      <View style={{flex: 1}}>
+        <ListItem key='new' bottomDivider 
+          onPress={() => { props.navigation.navigate('MyServices', { id: 0 }) }}
+          containerStyle={
+            {
+              borderLeftWidth: Platform.OS === 'web' ? 1 : 0,
+              borderRightWidth: Platform.OS === 'web' ? 1 : 0,
+              borderBottomColor: theme.colors.primary,
+              borderBottomWidth: 2, 
+              width: Platform.OS === 'web' ? '33%' : '100%',
+              alignSelf: 'center'
+            }}>
+          <ListItem.Content>
+            <ListItem.Title style={{ fontWeight: 'bold' }}>Criar Serviço</ListItem.Title>
+          </ListItem.Content>
+          <ListItem.Chevron name='add-circle' color={theme.colors.blue} />
+        </ListItem>
+        {
+          props.services.map(service => 
+            <ListItem key={service.id} bottomDivider
+            onPress={() => { props.navigation.navigate('MyServices', { id: service.id }) }}
+            containerStyle={
+              {
+                borderLeftWidth: Platform.OS === 'web' ? 1 : 0,
+                borderRightWidth: Platform.OS === 'web' ? 1 : 0,
+                width: Platform.OS === 'web' ? '33%' : '100%',
+                alignSelf: 'center'
+              }}>
+              <ListItem.Content>
+                <ListItem.Title>{service.title}</ListItem.Title>
+              </ListItem.Content>
+              <ListItem.Chevron />
+            </ListItem>
+          )
+       }
+      </View>
     </View>
   )
 }
