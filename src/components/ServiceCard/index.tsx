@@ -4,27 +4,8 @@ import { useNavigation } from "@react-navigation/native";
 import { Avatar, Card, Rating } from "react-native-elements";
 import { ConsultantScreenNavigationProp } from "../../navigation";
 import { theme } from "../../global/theme";
+import { ServiceCardProps } from "../../global/interfaces";
 
-interface User {
-  id: number,
-  name: string,
-  rateCount: number,
-  rateMeanStars: number,
-  profilePicUrl: string,
-  shortDescription: string
-}
-
-export interface Service {
-  id: number,
-  title: string,
-  description: string,
-  pictureUrl: string,
-  user?: User
-}
-
-interface ServiceCardProps {
-  service: Service
-}
 
 export function ServiceCard(props: ServiceCardProps) {
   const navigation = useNavigation<ConsultantScreenNavigationProp>();
