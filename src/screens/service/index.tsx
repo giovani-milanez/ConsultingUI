@@ -5,8 +5,8 @@ import { useFocusEffect } from '@react-navigation/native';
 
 import { ServiceScreenProps } from "../../navigation";
 import api from '../../plugins/axios';
-import { Service } from '../../components/ServiceCard';
 import { CustomHeader } from '../../components/CustomHeader';
+import { Service } from '../../global/interfaces';
 
 export function ServiceScreen({ route, navigation } : ServiceScreenProps) {
   const [loading, setLoading] = useState(true);
